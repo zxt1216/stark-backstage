@@ -12,7 +12,7 @@
 
 ### IntelliJ IDEA ###
 .idea
-.mvn
+.mvn/*
 git
 mvnw
 mvnw.cmd
