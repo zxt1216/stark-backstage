@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sean.arya.stark.backstage.dao.StarkDeptMapper">
+    <resultMap id="baseResult" type="com.sean.arya.stark.backstage.dao.domain.StarkDept">
+        <result column="ID" property="id" jdbcType="BIGINT"/>
+        <result column="DEPT_ID" property="deptId" jdbcType="VARCHAR"/>
+        <result column="DEPT_NAME" property="deptName" jdbcType="VARCHAR"/>
+        <result column="DEPT_PARENT_ID" property="deptParentId" jdbcType="VARCHAR"/>
+        <result column="DEPT_STATE" property="deptState" jdbcType="TINYINT"/>
+        <result column="GTM_CREATE" property="gtmCreate" jdbcType="TIMESTAMP"/>
+        <result column="GTM_UPDATE" property="gtmUpdate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <!-- 基础字段 -->
+    <sql id="baseColumns">
+        `ID`,
+        <include refid="insertColumns"/>
+    </sql>
+    <!-- Insert字段 -->
+    <sql id="insertColumns">
+        `DEPT_ID`,`DEPT_NAME`,`DEPT_PARENT_ID`,`DEPT_STATE`,`GTM_CREATE`,
+        `GTM_UPDATE`
+    </sql>
+    <!-- 根据主键查询一行数据 -->
+    <select id="get" parameterType="java.lang.String" resultMap="baseResult">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM STARK_DEPT
+        WHERE `DEPT_ID` = #{deptId,jdbcType=VARCHAR}
+    </select>
+    <!-- 根据主键更新非空字段 -->
+    <update id="update" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkDept">
+        UPDATE STARK_DEPT
+        <set>
+            <if test="deptName != null and deptName != '' " >
+                `DEPT_NAME` = #{deptName,jdbcType=VARCHAR},
+            </if>
+            <if test="deptParentId != null and deptParentId != '' " >
+                `DEPT_PARENT_ID` = #{deptParentId,jdbcType=VARCHAR},
+            </if>
+            <if test="deptState != null" >
+                `DEPT_STATE` = #{deptState,jdbcType=TINYINT},
+            </if>
+            <if test="gtmCreate != null" >
+                `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gtmUpdate != null" >
+                `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        WHERE `DEPT_ID` = #{deptId,jdbcType=VARCHAR}
+    </update>
+    <!-- 根据主键更新全部字段 -->
+    <update id="cover" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkDept">
+        UPDATE STARK_DEPT
+        SET 
+            `DEPT_NAME` = #{deptName,jdbcType=VARCHAR},
+            `DEPT_PARENT_ID` = #{deptParentId,jdbcType=VARCHAR},
+            `DEPT_STATE` = #{deptState,jdbcType=TINYINT},
+            `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP},
+            `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP}
+        WHERE `DEPT_ID` = #{deptId,jdbcType=VARCHAR}
+    </update>
+    <!-- 统计数量 -->
+    <select id="count" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkDept" resultType="java.lang.Integer">
+        SELECT count(*) FROM STARK_DEPT
+        <where>
+            <if test="id != null" >
+            AND `ID` = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="deptId != null and deptId != '' " >
+            AND `DEPT_ID` = #{deptId,jdbcType=VARCHAR}
+            </if>
+            <if test="deptName != null and deptName != '' " >
+            AND `DEPT_NAME` = #{deptName,jdbcType=VARCHAR}
+            </if>
+            <if test="deptParentId != null and deptParentId != '' " >
+            AND `DEPT_PARENT_ID` = #{deptParentId,jdbcType=VARCHAR}
+            </if>
+            <if test="deptState != null" >
+            AND `DEPT_STATE` = #{deptState,jdbcType=TINYINT}
+            </if>
+            <if test="gtmCreate != null" >
+            AND `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="gtmUpdate != null" >
+            AND `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkDept" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO STARK_DEPT(<include refid="insertColumns"/>) VALUES(
+            #{deptId,jdbcType=VARCHAR},
+            #{deptName,jdbcType=VARCHAR},
+            #{deptParentId,jdbcType=VARCHAR},
+            #{deptState,jdbcType=TINYINT},
+            #{gtmCreate,jdbcType=TIMESTAMP},
+            #{gtmUpdate,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <!-- 批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO STARK_DEPT(<include refid="insertColumns"/>) VALUES 
+        <foreach collection="entities" item="item" separator="," >
+            (
+            #{item.deptId,jdbcType=VARCHAR},
+            #{item.deptName,jdbcType=VARCHAR},
+            #{item.deptParentId,jdbcType=VARCHAR},
+            #{item.deptState,jdbcType=TINYINT},
+            #{item.gtmCreate,jdbcType=TIMESTAMP},
+            #{item.gtmUpdate,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
+    <!-- 条件查询 -->
+    <select id="query" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkDept" resultMap="baseResult">
+        SELECT <include refid="baseColumns" /> FROM STARK_DEPT
+        <where>
+            <if test="id != null" >
+            AND `ID` = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="deptId != null and deptId != '' " >
+            AND `DEPT_ID` = #{deptId,jdbcType=VARCHAR}
+            </if>
+            <if test="deptName != null and deptName != '' " >
+            AND `DEPT_NAME` = #{deptName,jdbcType=VARCHAR}
+            </if>
+            <if test="deptParentId != null and deptParentId != '' " >
+            AND `DEPT_PARENT_ID` = #{deptParentId,jdbcType=VARCHAR}
+            </if>
+            <if test="deptState != null" >
+            AND `DEPT_STATE` = #{deptState,jdbcType=TINYINT}
+            </if>
+            <if test="gtmCreate != null" >
+            AND `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="gtmUpdate != null" >
+            AND `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+    <!-- 条件分页查询 -->
+    <select id="page" resultMap="baseResult">
+        SELECT <include refid="baseColumns" /> FROM STARK_DEPT
+        <where>
+            <if test="entity.id != null" >
+            AND `ID` = #{entity.id,jdbcType=BIGINT}
+            </if>
+            <if test="entity.deptId != null and entity.deptId != '' " >
+            AND `DEPT_ID` = #{entity.deptId,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.deptName != null and entity.deptName != '' " >
+            AND `DEPT_NAME` = #{entity.deptName,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.deptParentId != null and entity.deptParentId != '' " >
+            AND `DEPT_PARENT_ID` = #{entity.deptParentId,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.deptState != null" >
+            AND `DEPT_STATE` = #{entity.deptState,jdbcType=TINYINT}
+            </if>
+            <if test="entity.gtmCreate != null" >
+            AND `GTM_CREATE` = #{entity.gtmCreate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="entity.gtmUpdate != null" >
+            AND `GTM_UPDATE` = #{entity.gtmUpdate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+        limit #{start},#{size}
+    </select>
+    <!-- 根据主键删除一行数据 -->
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM STARK_DEPT
+        WHERE `DEPT_ID` = #{deptId,jdbcType=VARCHAR}
+    </delete>
+</mapper>

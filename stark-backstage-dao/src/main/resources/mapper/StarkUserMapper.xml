@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sean.arya.stark.backstage.dao.StarkUserMapper">
+    <resultMap id="baseResult" type="com.sean.arya.stark.backstage.dao.domain.StarkUser">
+        <result column="ID" property="id" jdbcType="BIGINT"/>
+        <result column="USER_ID" property="userId" jdbcType="VARCHAR"/>
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+        <result column="USER_EMAIL" property="userEmail" jdbcType="VARCHAR"/>
+        <result column="USER_PHONE" property="userPhone" jdbcType="VARCHAR"/>
+        <result column="USER_PASSWORD" property="userPassword" jdbcType="VARCHAR"/>
+        <result column="USER_SALT" property="userSalt" jdbcType="VARCHAR"/>
+        <result column="USER_STATE" property="userState" jdbcType="TINYINT"/>
+        <result column="GTM_CREATE" property="gtmCreate" jdbcType="TIMESTAMP"/>
+        <result column="GTM_UPDATE" property="gtmUpdate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <!-- 基础字段 -->
+    <sql id="baseColumns">
+        `ID`,
+        <include refid="insertColumns"/>
+    </sql>
+    <!-- Insert字段 -->
+    <sql id="insertColumns">
+        `USER_ID`,`USER_NAME`,`USER_EMAIL`,`USER_PHONE`,`USER_PASSWORD`,
+        `USER_SALT`,`USER_STATE`,`GTM_CREATE`,`GTM_UPDATE`
+    </sql>
+    <!-- 根据主键查询一行数据 -->
+    <select id="get" parameterType="java.lang.String" resultMap="baseResult">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM STARK_USER
+        WHERE `USER_ID` = #{userId,jdbcType=VARCHAR}
+    </select>
+    <!-- 根据主键更新非空字段 -->
+    <update id="update" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkUser">
+        UPDATE STARK_USER
+        <set>
+            <if test="userName != null and userName != '' " >
+                `USER_NAME` = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userEmail != null and userEmail != '' " >
+                `USER_EMAIL` = #{userEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="userPhone != null and userPhone != '' " >
+                `USER_PHONE` = #{userPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="userPassword != null and userPassword != '' " >
+                `USER_PASSWORD` = #{userPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="userSalt != null and userSalt != '' " >
+                `USER_SALT` = #{userSalt,jdbcType=VARCHAR},
+            </if>
+            <if test="userState != null" >
+                `USER_STATE` = #{userState,jdbcType=TINYINT},
+            </if>
+            <if test="gtmCreate != null" >
+                `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gtmUpdate != null" >
+                `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        WHERE `USER_ID` = #{userId,jdbcType=VARCHAR}
+    </update>
+    <!-- 根据主键更新全部字段 -->
+    <update id="cover" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkUser">
+        UPDATE STARK_USER
+        SET 
+            `USER_NAME` = #{userName,jdbcType=VARCHAR},
+            `USER_EMAIL` = #{userEmail,jdbcType=VARCHAR},
+            `USER_PHONE` = #{userPhone,jdbcType=VARCHAR},
+            `USER_PASSWORD` = #{userPassword,jdbcType=VARCHAR},
+            `USER_SALT` = #{userSalt,jdbcType=VARCHAR},
+            `USER_STATE` = #{userState,jdbcType=TINYINT},
+            `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP},
+            `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP}
+        WHERE `USER_ID` = #{userId,jdbcType=VARCHAR}
+    </update>
+    <!-- 统计数量 -->
+    <select id="count" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkUser" resultType="java.lang.Integer">
+        SELECT count(*) FROM STARK_USER
+        <where>
+            <if test="id != null" >
+            AND `ID` = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null and userId != '' " >
+            AND `USER_ID` = #{userId,jdbcType=VARCHAR}
+            </if>
+            <if test="userName != null and userName != '' " >
+            AND `USER_NAME` = #{userName,jdbcType=VARCHAR}
+            </if>
+            <if test="userEmail != null and userEmail != '' " >
+            AND `USER_EMAIL` = #{userEmail,jdbcType=VARCHAR}
+            </if>
+            <if test="userPhone != null and userPhone != '' " >
+            AND `USER_PHONE` = #{userPhone,jdbcType=VARCHAR}
+            </if>
+            <if test="userPassword != null and userPassword != '' " >
+            AND `USER_PASSWORD` = #{userPassword,jdbcType=VARCHAR}
+            </if>
+            <if test="userSalt != null and userSalt != '' " >
+            AND `USER_SALT` = #{userSalt,jdbcType=VARCHAR}
+            </if>
+            <if test="userState != null" >
+            AND `USER_STATE` = #{userState,jdbcType=TINYINT}
+            </if>
+            <if test="gtmCreate != null" >
+            AND `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="gtmUpdate != null" >
+            AND `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO STARK_USER(<include refid="insertColumns"/>) VALUES(
+            #{userId,jdbcType=VARCHAR},
+            #{userName,jdbcType=VARCHAR},
+            #{userEmail,jdbcType=VARCHAR},
+            #{userPhone,jdbcType=VARCHAR},
+            #{userPassword,jdbcType=VARCHAR},
+            #{userSalt,jdbcType=VARCHAR},
+            #{userState,jdbcType=TINYINT},
+            #{gtmCreate,jdbcType=TIMESTAMP},
+            #{gtmUpdate,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <!-- 批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO STARK_USER(<include refid="insertColumns"/>) VALUES 
+        <foreach collection="entities" item="item" separator="," >
+            (
+            #{item.userId,jdbcType=VARCHAR},
+            #{item.userName,jdbcType=VARCHAR},
+            #{item.userEmail,jdbcType=VARCHAR},
+            #{item.userPhone,jdbcType=VARCHAR},
+            #{item.userPassword,jdbcType=VARCHAR},
+            #{item.userSalt,jdbcType=VARCHAR},
+            #{item.userState,jdbcType=TINYINT},
+            #{item.gtmCreate,jdbcType=TIMESTAMP},
+            #{item.gtmUpdate,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
+    <!-- 条件查询 -->
+    <select id="query" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkUser" resultMap="baseResult">
+        SELECT <include refid="baseColumns" /> FROM STARK_USER
+        <where>
+            <if test="id != null" >
+            AND `ID` = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null and userId != '' " >
+            AND `USER_ID` = #{userId,jdbcType=VARCHAR}
+            </if>
+            <if test="userName != null and userName != '' " >
+            AND `USER_NAME` = #{userName,jdbcType=VARCHAR}
+            </if>
+            <if test="userEmail != null and userEmail != '' " >
+            AND `USER_EMAIL` = #{userEmail,jdbcType=VARCHAR}
+            </if>
+            <if test="userPhone != null and userPhone != '' " >
+            AND `USER_PHONE` = #{userPhone,jdbcType=VARCHAR}
+            </if>
+            <if test="userPassword != null and userPassword != '' " >
+            AND `USER_PASSWORD` = #{userPassword,jdbcType=VARCHAR}
+            </if>
+            <if test="userSalt != null and userSalt != '' " >
+            AND `USER_SALT` = #{userSalt,jdbcType=VARCHAR}
+            </if>
+            <if test="userState != null" >
+            AND `USER_STATE` = #{userState,jdbcType=TINYINT}
+            </if>
+            <if test="gtmCreate != null" >
+            AND `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="gtmUpdate != null" >
+            AND `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+    <!-- 条件分页查询 -->
+    <select id="page" resultMap="baseResult">
+        SELECT <include refid="baseColumns" /> FROM STARK_USER
+        <where>
+            <if test="entity.id != null" >
+            AND `ID` = #{entity.id,jdbcType=BIGINT}
+            </if>
+            <if test="entity.userId != null and entity.userId != '' " >
+            AND `USER_ID` = #{entity.userId,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.userName != null and entity.userName != '' " >
+            AND `USER_NAME` = #{entity.userName,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.userEmail != null and entity.userEmail != '' " >
+            AND `USER_EMAIL` = #{entity.userEmail,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.userPhone != null and entity.userPhone != '' " >
+            AND `USER_PHONE` = #{entity.userPhone,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.userPassword != null and entity.userPassword != '' " >
+            AND `USER_PASSWORD` = #{entity.userPassword,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.userSalt != null and entity.userSalt != '' " >
+            AND `USER_SALT` = #{entity.userSalt,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.userState != null" >
+            AND `USER_STATE` = #{entity.userState,jdbcType=TINYINT}
+            </if>
+            <if test="entity.gtmCreate != null" >
+            AND `GTM_CREATE` = #{entity.gtmCreate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="entity.gtmUpdate != null" >
+            AND `GTM_UPDATE` = #{entity.gtmUpdate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+        limit #{start},#{size}
+    </select>
+    <!-- 根据主键删除一行数据 -->
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM STARK_USER
+        WHERE `USER_ID` = #{userId,jdbcType=VARCHAR}
+    </delete>
+</mapper>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sean.arya.stark.backstage.dao.StarkAccessLogMapper">
+    <resultMap id="baseResult" type="com.sean.arya.stark.backstage.dao.domain.StarkAccessLog">
+        <result column="ID" property="id" jdbcType="BIGINT"/>
+        <result column="ACCESS_LOG_ID" property="accessLogId" jdbcType="VARCHAR"/>
+        <result column="ACCESS_IP" property="accessIp" jdbcType="VARCHAR"/>
+        <result column="USER_ID" property="userId" jdbcType="VARCHAR"/>
+        <result column="OPERATE_TYPE" property="operateType" jdbcType="TINYINT"/>
+        <result column="OPERATE_REQ" property="operateReq" jdbcType="VARCHAR"/>
+        <result column="OPERATOR_NOTE" property="operatorNote" jdbcType="VARCHAR"/>
+        <result column="GTM_CREATE" property="gtmCreate" jdbcType="TIMESTAMP"/>
+        <result column="GTM_UPDATE" property="gtmUpdate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <!-- 基础字段 -->
+    <sql id="baseColumns">
+        `ID`,
+        <include refid="insertColumns"/>
+    </sql>
+    <!-- Insert字段 -->
+    <sql id="insertColumns">
+        `ACCESS_LOG_ID`,`ACCESS_IP`,`USER_ID`,`OPERATE_TYPE`,`OPERATE_REQ`,
+        `OPERATOR_NOTE`,`GTM_CREATE`,`GTM_UPDATE`
+    </sql>
+    <!-- 根据主键查询一行数据 -->
+    <select id="get" parameterType="java.lang.String" resultMap="baseResult">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM STARK_ACCESS_LOG
+        WHERE `ACCESS_LOG_ID` = #{accessLogId,jdbcType=VARCHAR}
+    </select>
+    <!-- 根据主键更新非空字段 -->
+    <update id="update" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkAccessLog">
+        UPDATE STARK_ACCESS_LOG
+        <set>
+            <if test="accessIp != null and accessIp != '' " >
+                `ACCESS_IP` = #{accessIp,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null and userId != '' " >
+                `USER_ID` = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="operateType != null" >
+                `OPERATE_TYPE` = #{operateType,jdbcType=TINYINT},
+            </if>
+            <if test="operateReq != null and operateReq != '' " >
+                `OPERATE_REQ` = #{operateReq,jdbcType=VARCHAR},
+            </if>
+            <if test="operatorNote != null and operatorNote != '' " >
+                `OPERATOR_NOTE` = #{operatorNote,jdbcType=VARCHAR},
+            </if>
+            <if test="gtmCreate != null" >
+                `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gtmUpdate != null" >
+                `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        WHERE `ACCESS_LOG_ID` = #{accessLogId,jdbcType=VARCHAR}
+    </update>
+    <!-- 根据主键更新全部字段 -->
+    <update id="cover" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkAccessLog">
+        UPDATE STARK_ACCESS_LOG
+        SET 
+            `ACCESS_IP` = #{accessIp,jdbcType=VARCHAR},
+            `USER_ID` = #{userId,jdbcType=VARCHAR},
+            `OPERATE_TYPE` = #{operateType,jdbcType=TINYINT},
+            `OPERATE_REQ` = #{operateReq,jdbcType=VARCHAR},
+            `OPERATOR_NOTE` = #{operatorNote,jdbcType=VARCHAR},
+            `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP},
+            `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP}
+        WHERE `ACCESS_LOG_ID` = #{accessLogId,jdbcType=VARCHAR}
+    </update>
+    <!-- 统计数量 -->
+    <select id="count" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkAccessLog" resultType="java.lang.Integer">
+        SELECT count(*) FROM STARK_ACCESS_LOG
+        <where>
+            <if test="id != null" >
+            AND `ID` = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="accessLogId != null and accessLogId != '' " >
+            AND `ACCESS_LOG_ID` = #{accessLogId,jdbcType=VARCHAR}
+            </if>
+            <if test="accessIp != null and accessIp != '' " >
+            AND `ACCESS_IP` = #{accessIp,jdbcType=VARCHAR}
+            </if>
+            <if test="userId != null and userId != '' " >
+            AND `USER_ID` = #{userId,jdbcType=VARCHAR}
+            </if>
+            <if test="operateType != null" >
+            AND `OPERATE_TYPE` = #{operateType,jdbcType=TINYINT}
+            </if>
+            <if test="operateReq != null and operateReq != '' " >
+            AND `OPERATE_REQ` = #{operateReq,jdbcType=VARCHAR}
+            </if>
+            <if test="operatorNote != null and operatorNote != '' " >
+            AND `OPERATOR_NOTE` = #{operatorNote,jdbcType=VARCHAR}
+            </if>
+            <if test="gtmCreate != null" >
+            AND `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="gtmUpdate != null" >
+            AND `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkAccessLog" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO STARK_ACCESS_LOG(<include refid="insertColumns"/>) VALUES(
+            #{accessLogId,jdbcType=VARCHAR},
+            #{accessIp,jdbcType=VARCHAR},
+            #{userId,jdbcType=VARCHAR},
+            #{operateType,jdbcType=TINYINT},
+            #{operateReq,jdbcType=VARCHAR},
+            #{operatorNote,jdbcType=VARCHAR},
+            #{gtmCreate,jdbcType=TIMESTAMP},
+            #{gtmUpdate,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <!-- 批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO STARK_ACCESS_LOG(<include refid="insertColumns"/>) VALUES 
+        <foreach collection="entities" item="item" separator="," >
+            (
+            #{item.accessLogId,jdbcType=VARCHAR},
+            #{item.accessIp,jdbcType=VARCHAR},
+            #{item.userId,jdbcType=VARCHAR},
+            #{item.operateType,jdbcType=TINYINT},
+            #{item.operateReq,jdbcType=VARCHAR},
+            #{item.operatorNote,jdbcType=VARCHAR},
+            #{item.gtmCreate,jdbcType=TIMESTAMP},
+            #{item.gtmUpdate,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
+    <!-- 条件查询 -->
+    <select id="query" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkAccessLog" resultMap="baseResult">
+        SELECT <include refid="baseColumns" /> FROM STARK_ACCESS_LOG
+        <where>
+            <if test="id != null" >
+            AND `ID` = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="accessLogId != null and accessLogId != '' " >
+            AND `ACCESS_LOG_ID` = #{accessLogId,jdbcType=VARCHAR}
+            </if>
+            <if test="accessIp != null and accessIp != '' " >
+            AND `ACCESS_IP` = #{accessIp,jdbcType=VARCHAR}
+            </if>
+            <if test="userId != null and userId != '' " >
+            AND `USER_ID` = #{userId,jdbcType=VARCHAR}
+            </if>
+            <if test="operateType != null" >
+            AND `OPERATE_TYPE` = #{operateType,jdbcType=TINYINT}
+            </if>
+            <if test="operateReq != null and operateReq != '' " >
+            AND `OPERATE_REQ` = #{operateReq,jdbcType=VARCHAR}
+            </if>
+            <if test="operatorNote != null and operatorNote != '' " >
+            AND `OPERATOR_NOTE` = #{operatorNote,jdbcType=VARCHAR}
+            </if>
+            <if test="gtmCreate != null" >
+            AND `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="gtmUpdate != null" >
+            AND `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+    <!-- 条件分页查询 -->
+    <select id="page" resultMap="baseResult">
+        SELECT <include refid="baseColumns" /> FROM STARK_ACCESS_LOG
+        <where>
+            <if test="entity.id != null" >
+            AND `ID` = #{entity.id,jdbcType=BIGINT}
+            </if>
+            <if test="entity.accessLogId != null and entity.accessLogId != '' " >
+            AND `ACCESS_LOG_ID` = #{entity.accessLogId,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.accessIp != null and entity.accessIp != '' " >
+            AND `ACCESS_IP` = #{entity.accessIp,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.userId != null and entity.userId != '' " >
+            AND `USER_ID` = #{entity.userId,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.operateType != null" >
+            AND `OPERATE_TYPE` = #{entity.operateType,jdbcType=TINYINT}
+            </if>
+            <if test="entity.operateReq != null and entity.operateReq != '' " >
+            AND `OPERATE_REQ` = #{entity.operateReq,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.operatorNote != null and entity.operatorNote != '' " >
+            AND `OPERATOR_NOTE` = #{entity.operatorNote,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.gtmCreate != null" >
+            AND `GTM_CREATE` = #{entity.gtmCreate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="entity.gtmUpdate != null" >
+            AND `GTM_UPDATE` = #{entity.gtmUpdate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+        limit #{start},#{size}
+    </select>
+    <!-- 根据主键删除一行数据 -->
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM STARK_ACCESS_LOG
+        WHERE `ACCESS_LOG_ID` = #{accessLogId,jdbcType=VARCHAR}
+    </delete>
+</mapper>

@@ -33,12 +33,15 @@
         <fastjson.version>1.2.3</fastjson.version>
         <zkclient.version>0.10</zkclient.version>
         <mybatis.springboot.version>1.3.1</mybatis.springboot.version>
+        <lang.commons.version>3.7</lang.commons.version>
+        <apache.http.version>4.5.3</apache.http.version>
         <!--插件版本信息-->
         <plugin.maven.compiler.version>3.3</plugin.maven.compiler.version>
         <plugin.maven.deploy.version>2.8.2</plugin.maven.deploy.version>
         <plugin.maven.resources.version>3.0.2</plugin.maven.resources.version>
         <plugin.maven.javadoc.version>3.0.0-M1</plugin.maven.javadoc.version>
         <plugin.maven.source.version>3.0.1</plugin.maven.source.version>
+        <jsch.version>0.1.42</jsch.version>
     </properties>
 
     <profiles>
@@ -120,6 +123,22 @@
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis.springboot.version}</version>
+            </dependency>
+            <!--util-->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${lang.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jcraft</groupId>
+                <artifactId>jsch</artifactId>
+                <version>${jsch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${apache.http.version}</version>
             </dependency>
 
             <dependency>

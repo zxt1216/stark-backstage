@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sean.arya.stark.backstage.dao.StarkRoleMapper">
+    <resultMap id="baseResult" type="com.sean.arya.stark.backstage.dao.domain.StarkRole">
+        <result column="ID" property="id" jdbcType="BIGINT"/>
+        <result column="ROLE_ID" property="roleId" jdbcType="VARCHAR"/>
+        <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR"/>
+        <result column="ROLE_STATE" property="roleState" jdbcType="TINYINT"/>
+        <result column="GTM_CREATE" property="gtmCreate" jdbcType="TIMESTAMP"/>
+        <result column="GTM_UPDATE" property="gtmUpdate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <!-- 基础字段 -->
+    <sql id="baseColumns">
+        `ID`,
+        <include refid="insertColumns"/>
+    </sql>
+    <!-- Insert字段 -->
+    <sql id="insertColumns">
+        `ROLE_ID`,`ROLE_NAME`,`ROLE_STATE`,`GTM_CREATE`,`GTM_UPDATE`
+    </sql>
+    <!-- 根据主键查询一行数据 -->
+    <select id="get" parameterType="java.lang.String" resultMap="baseResult">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM STARK_ROLE
+        WHERE `ROLE_ID` = #{roleId,jdbcType=VARCHAR}
+    </select>
+    <!-- 根据主键更新非空字段 -->
+    <update id="update" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkRole">
+        UPDATE STARK_ROLE
+        <set>
+            <if test="roleName != null and roleName != '' " >
+                `ROLE_NAME` = #{roleName,jdbcType=VARCHAR},
+            </if>
+            <if test="roleState != null" >
+                `ROLE_STATE` = #{roleState,jdbcType=TINYINT},
+            </if>
+            <if test="gtmCreate != null" >
+                `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gtmUpdate != null" >
+                `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        WHERE `ROLE_ID` = #{roleId,jdbcType=VARCHAR}
+    </update>
+    <!-- 根据主键更新全部字段 -->
+    <update id="cover" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkRole">
+        UPDATE STARK_ROLE
+        SET 
+            `ROLE_NAME` = #{roleName,jdbcType=VARCHAR},
+            `ROLE_STATE` = #{roleState,jdbcType=TINYINT},
+            `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP},
+            `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP}
+        WHERE `ROLE_ID` = #{roleId,jdbcType=VARCHAR}
+    </update>
+    <!-- 统计数量 -->
+    <select id="count" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkRole" resultType="java.lang.Integer">
+        SELECT count(*) FROM STARK_ROLE
+        <where>
+            <if test="id != null" >
+            AND `ID` = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="roleId != null and roleId != '' " >
+            AND `ROLE_ID` = #{roleId,jdbcType=VARCHAR}
+            </if>
+            <if test="roleName != null and roleName != '' " >
+            AND `ROLE_NAME` = #{roleName,jdbcType=VARCHAR}
+            </if>
+            <if test="roleState != null" >
+            AND `ROLE_STATE` = #{roleState,jdbcType=TINYINT}
+            </if>
+            <if test="gtmCreate != null" >
+            AND `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="gtmUpdate != null" >
+            AND `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkRole" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO STARK_ROLE(<include refid="insertColumns"/>) VALUES(
+            #{roleId,jdbcType=VARCHAR},
+            #{roleName,jdbcType=VARCHAR},
+            #{roleState,jdbcType=TINYINT},
+            #{gtmCreate,jdbcType=TIMESTAMP},
+            #{gtmUpdate,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <!-- 批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO STARK_ROLE(<include refid="insertColumns"/>) VALUES 
+        <foreach collection="entities" item="item" separator="," >
+            (
+            #{item.roleId,jdbcType=VARCHAR},
+            #{item.roleName,jdbcType=VARCHAR},
+            #{item.roleState,jdbcType=TINYINT},
+            #{item.gtmCreate,jdbcType=TIMESTAMP},
+            #{item.gtmUpdate,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
+    <!-- 条件查询 -->
+    <select id="query" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkRole" resultMap="baseResult">
+        SELECT <include refid="baseColumns" /> FROM STARK_ROLE
+        <where>
+            <if test="id != null" >
+            AND `ID` = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="roleId != null and roleId != '' " >
+            AND `ROLE_ID` = #{roleId,jdbcType=VARCHAR}
+            </if>
+            <if test="roleName != null and roleName != '' " >
+            AND `ROLE_NAME` = #{roleName,jdbcType=VARCHAR}
+            </if>
+            <if test="roleState != null" >
+            AND `ROLE_STATE` = #{roleState,jdbcType=TINYINT}
+            </if>
+            <if test="gtmCreate != null" >
+            AND `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="gtmUpdate != null" >
+            AND `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+    <!-- 条件分页查询 -->
+    <select id="page" resultMap="baseResult">
+        SELECT <include refid="baseColumns" /> FROM STARK_ROLE
+        <where>
+            <if test="entity.id != null" >
+            AND `ID` = #{entity.id,jdbcType=BIGINT}
+            </if>
+            <if test="entity.roleId != null and entity.roleId != '' " >
+            AND `ROLE_ID` = #{entity.roleId,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.roleName != null and entity.roleName != '' " >
+            AND `ROLE_NAME` = #{entity.roleName,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.roleState != null" >
+            AND `ROLE_STATE` = #{entity.roleState,jdbcType=TINYINT}
+            </if>
+            <if test="entity.gtmCreate != null" >
+            AND `GTM_CREATE` = #{entity.gtmCreate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="entity.gtmUpdate != null" >
+            AND `GTM_UPDATE` = #{entity.gtmUpdate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+        limit #{start},#{size}
+    </select>
+    <!-- 根据主键删除一行数据 -->
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM STARK_ROLE
+        WHERE `ROLE_ID` = #{roleId,jdbcType=VARCHAR}
+    </delete>
+</mapper>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sean.arya.stark.backstage.dao.StarkResourceMapper">
+    <resultMap id="baseResult" type="com.sean.arya.stark.backstage.dao.domain.StarkResource">
+        <result column="ID" property="id" jdbcType="BIGINT"/>
+        <result column="RESOURCE_ID" property="resourceId" jdbcType="VARCHAR"/>
+        <result column="RESOURCE_NAME" property="resourceName" jdbcType="VARCHAR"/>
+        <result column="RESOURCE_TYPE" property="resourceType" jdbcType="TINYINT"/>
+        <result column="RESOURCE_MENU_PARENT" property="resourceMenuParent" jdbcType="VARCHAR"/>
+        <result column="RESOURCE_MENU_LEAF" property="resourceMenuLeaf" jdbcType="TINYINT"/>
+        <result column="RESOURCE_MENU_IDX" property="resourceMenuIdx" jdbcType="INTEGER"/>
+        <result column="RESOURCE_URL" property="resourceUrl" jdbcType="VARCHAR"/>
+        <result column="RESOURCE_STATE" property="resourceState" jdbcType="TINYINT"/>
+        <result column="GTM_CREATE" property="gtmCreate" jdbcType="TIMESTAMP"/>
+        <result column="GTM_UPDATE" property="gtmUpdate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <!-- 基础字段 -->
+    <sql id="baseColumns">
+        `ID`,
+        <include refid="insertColumns"/>
+    </sql>
+    <!-- Insert字段 -->
+    <sql id="insertColumns">
+        `RESOURCE_ID`,`RESOURCE_NAME`,`RESOURCE_TYPE`,`RESOURCE_MENU_PARENT`,`RESOURCE_MENU_LEAF`,
+        `RESOURCE_MENU_IDX`,`RESOURCE_URL`,`RESOURCE_STATE`,`GTM_CREATE`,`GTM_UPDATE`
+    </sql>
+    <!-- 根据主键查询一行数据 -->
+    <select id="get" parameterType="java.lang.String" resultMap="baseResult">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM STARK_RESOURCE
+        WHERE `RESOURCE_ID` = #{resourceId,jdbcType=VARCHAR}
+    </select>
+    <!-- 根据主键更新非空字段 -->
+    <update id="update" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkResource">
+        UPDATE STARK_RESOURCE
+        <set>
+            <if test="resourceName != null and resourceName != '' " >
+                `RESOURCE_NAME` = #{resourceName,jdbcType=VARCHAR},
+            </if>
+            <if test="resourceType != null" >
+                `RESOURCE_TYPE` = #{resourceType,jdbcType=TINYINT},
+            </if>
+            <if test="resourceMenuParent != null and resourceMenuParent != '' " >
+                `RESOURCE_MENU_PARENT` = #{resourceMenuParent,jdbcType=VARCHAR},
+            </if>
+            <if test="resourceMenuLeaf != null" >
+                `RESOURCE_MENU_LEAF` = #{resourceMenuLeaf,jdbcType=TINYINT},
+            </if>
+            <if test="resourceMenuIdx != null" >
+                `RESOURCE_MENU_IDX` = #{resourceMenuIdx,jdbcType=INTEGER},
+            </if>
+            <if test="resourceUrl != null and resourceUrl != '' " >
+                `RESOURCE_URL` = #{resourceUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="resourceState != null" >
+                `RESOURCE_STATE` = #{resourceState,jdbcType=TINYINT},
+            </if>
+            <if test="gtmCreate != null" >
+                `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gtmUpdate != null" >
+                `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        WHERE `RESOURCE_ID` = #{resourceId,jdbcType=VARCHAR}
+    </update>
+    <!-- 根据主键更新全部字段 -->
+    <update id="cover" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkResource">
+        UPDATE STARK_RESOURCE
+        SET 
+            `RESOURCE_NAME` = #{resourceName,jdbcType=VARCHAR},
+            `RESOURCE_TYPE` = #{resourceType,jdbcType=TINYINT},
+            `RESOURCE_MENU_PARENT` = #{resourceMenuParent,jdbcType=VARCHAR},
+            `RESOURCE_MENU_LEAF` = #{resourceMenuLeaf,jdbcType=TINYINT},
+            `RESOURCE_MENU_IDX` = #{resourceMenuIdx,jdbcType=INTEGER},
+            `RESOURCE_URL` = #{resourceUrl,jdbcType=VARCHAR},
+            `RESOURCE_STATE` = #{resourceState,jdbcType=TINYINT},
+            `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP},
+            `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP}
+        WHERE `RESOURCE_ID` = #{resourceId,jdbcType=VARCHAR}
+    </update>
+    <!-- 统计数量 -->
+    <select id="count" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkResource" resultType="java.lang.Integer">
+        SELECT count(*) FROM STARK_RESOURCE
+        <where>
+            <if test="id != null" >
+            AND `ID` = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="resourceId != null and resourceId != '' " >
+            AND `RESOURCE_ID` = #{resourceId,jdbcType=VARCHAR}
+            </if>
+            <if test="resourceName != null and resourceName != '' " >
+            AND `RESOURCE_NAME` = #{resourceName,jdbcType=VARCHAR}
+            </if>
+            <if test="resourceType != null" >
+            AND `RESOURCE_TYPE` = #{resourceType,jdbcType=TINYINT}
+            </if>
+            <if test="resourceMenuParent != null and resourceMenuParent != '' " >
+            AND `RESOURCE_MENU_PARENT` = #{resourceMenuParent,jdbcType=VARCHAR}
+            </if>
+            <if test="resourceMenuLeaf != null" >
+            AND `RESOURCE_MENU_LEAF` = #{resourceMenuLeaf,jdbcType=TINYINT}
+            </if>
+            <if test="resourceMenuIdx != null" >
+            AND `RESOURCE_MENU_IDX` = #{resourceMenuIdx,jdbcType=INTEGER}
+            </if>
+            <if test="resourceUrl != null and resourceUrl != '' " >
+            AND `RESOURCE_URL` = #{resourceUrl,jdbcType=VARCHAR}
+            </if>
+            <if test="resourceState != null" >
+            AND `RESOURCE_STATE` = #{resourceState,jdbcType=TINYINT}
+            </if>
+            <if test="gtmCreate != null" >
+            AND `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="gtmUpdate != null" >
+            AND `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkResource" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO STARK_RESOURCE(<include refid="insertColumns"/>) VALUES(
+            #{resourceId,jdbcType=VARCHAR},
+            #{resourceName,jdbcType=VARCHAR},
+            #{resourceType,jdbcType=TINYINT},
+            #{resourceMenuParent,jdbcType=VARCHAR},
+            #{resourceMenuLeaf,jdbcType=TINYINT},
+            #{resourceMenuIdx,jdbcType=INTEGER},
+            #{resourceUrl,jdbcType=VARCHAR},
+            #{resourceState,jdbcType=TINYINT},
+            #{gtmCreate,jdbcType=TIMESTAMP},
+            #{gtmUpdate,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <!-- 批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO STARK_RESOURCE(<include refid="insertColumns"/>) VALUES 
+        <foreach collection="entities" item="item" separator="," >
+            (
+            #{item.resourceId,jdbcType=VARCHAR},
+            #{item.resourceName,jdbcType=VARCHAR},
+            #{item.resourceType,jdbcType=TINYINT},
+            #{item.resourceMenuParent,jdbcType=VARCHAR},
+            #{item.resourceMenuLeaf,jdbcType=TINYINT},
+            #{item.resourceMenuIdx,jdbcType=INTEGER},
+            #{item.resourceUrl,jdbcType=VARCHAR},
+            #{item.resourceState,jdbcType=TINYINT},
+            #{item.gtmCreate,jdbcType=TIMESTAMP},
+            #{item.gtmUpdate,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
+    <!-- 条件查询 -->
+    <select id="query" parameterType="com.sean.arya.stark.backstage.dao.domain.StarkResource" resultMap="baseResult">
+        SELECT <include refid="baseColumns" /> FROM STARK_RESOURCE
+        <where>
+            <if test="id != null" >
+            AND `ID` = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="resourceId != null and resourceId != '' " >
+            AND `RESOURCE_ID` = #{resourceId,jdbcType=VARCHAR}
+            </if>
+            <if test="resourceName != null and resourceName != '' " >
+            AND `RESOURCE_NAME` = #{resourceName,jdbcType=VARCHAR}
+            </if>
+            <if test="resourceType != null" >
+            AND `RESOURCE_TYPE` = #{resourceType,jdbcType=TINYINT}
+            </if>
+            <if test="resourceMenuParent != null and resourceMenuParent != '' " >
+            AND `RESOURCE_MENU_PARENT` = #{resourceMenuParent,jdbcType=VARCHAR}
+            </if>
+            <if test="resourceMenuLeaf != null" >
+            AND `RESOURCE_MENU_LEAF` = #{resourceMenuLeaf,jdbcType=TINYINT}
+            </if>
+            <if test="resourceMenuIdx != null" >
+            AND `RESOURCE_MENU_IDX` = #{resourceMenuIdx,jdbcType=INTEGER}
+            </if>
+            <if test="resourceUrl != null and resourceUrl != '' " >
+            AND `RESOURCE_URL` = #{resourceUrl,jdbcType=VARCHAR}
+            </if>
+            <if test="resourceState != null" >
+            AND `RESOURCE_STATE` = #{resourceState,jdbcType=TINYINT}
+            </if>
+            <if test="gtmCreate != null" >
+            AND `GTM_CREATE` = #{gtmCreate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="gtmUpdate != null" >
+            AND `GTM_UPDATE` = #{gtmUpdate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+    <!-- 条件分页查询 -->
+    <select id="page" resultMap="baseResult">
+        SELECT <include refid="baseColumns" /> FROM STARK_RESOURCE
+        <where>
+            <if test="entity.id != null" >
+            AND `ID` = #{entity.id,jdbcType=BIGINT}
+            </if>
+            <if test="entity.resourceId != null and entity.resourceId != '' " >
+            AND `RESOURCE_ID` = #{entity.resourceId,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.resourceName != null and entity.resourceName != '' " >
+            AND `RESOURCE_NAME` = #{entity.resourceName,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.resourceType != null" >
+            AND `RESOURCE_TYPE` = #{entity.resourceType,jdbcType=TINYINT}
+            </if>
+            <if test="entity.resourceMenuParent != null and entity.resourceMenuParent != '' " >
+            AND `RESOURCE_MENU_PARENT` = #{entity.resourceMenuParent,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.resourceMenuLeaf != null" >
+            AND `RESOURCE_MENU_LEAF` = #{entity.resourceMenuLeaf,jdbcType=TINYINT}
+            </if>
+            <if test="entity.resourceMenuIdx != null" >
+            AND `RESOURCE_MENU_IDX` = #{entity.resourceMenuIdx,jdbcType=INTEGER}
+            </if>
+            <if test="entity.resourceUrl != null and entity.resourceUrl != '' " >
+            AND `RESOURCE_URL` = #{entity.resourceUrl,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.resourceState != null" >
+            AND `RESOURCE_STATE` = #{entity.resourceState,jdbcType=TINYINT}
+            </if>
+            <if test="entity.gtmCreate != null" >
+            AND `GTM_CREATE` = #{entity.gtmCreate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="entity.gtmUpdate != null" >
+            AND `GTM_UPDATE` = #{entity.gtmUpdate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+        limit #{start},#{size}
+    </select>
+    <!-- 根据主键删除一行数据 -->
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM STARK_RESOURCE
+        WHERE `RESOURCE_ID` = #{resourceId,jdbcType=VARCHAR}
+    </delete>
+</mapper>
